@@ -7,6 +7,9 @@
     <van-button type="danger">危险按钮</van-button>
 
   </div>
+  <div>
+    <RouterView />
+  </div>
 </template>
 
 <script setup>
