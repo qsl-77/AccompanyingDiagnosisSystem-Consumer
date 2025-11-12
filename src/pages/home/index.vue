@@ -39,7 +39,7 @@
     >
       <van-col span="6">
         <van-image
-          width="100px"
+          width="100"
           height="90"
           :src="item.avatar_url"
         ></van-image>

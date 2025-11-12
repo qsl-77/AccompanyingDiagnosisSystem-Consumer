@@ -6,5 +6,8 @@ export default {
     },
     index() {
         return request.get('/Index/index')
+    },
+    h5Companion() {
+        return request.get('/h5/companion')
     }
 }
