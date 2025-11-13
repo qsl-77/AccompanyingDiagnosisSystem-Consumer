@@ -42,7 +42,47 @@
               </div>
             </template>
           </van-cell>
+          <van-cell>
+            <template #title>陪诊师</template>
+            <template #default>
+              <div @click="showCompanion = true">
+                {{ compainionName || "请选择陪护师"}}
+                <van-icon name="arrow" />
+              </div>
+            </template>
+          </van-cell>
+          <van-cell>
+            <template #title>接送地址</template>
+            <template #default>
+              <van-field
+                v-model="form.receviceAddress"
+                class="text"
+                input-align="right"
+                placeholder="请输入接送地址"
+              />  
+            </template>
+          </van-cell>
+          <van-cell>
+            <template #title>联系电话</template>
+            <template #default>
+              <van-field
+                v-model="form.tel"
+                class="text"
+                input-align="right"
+                placeholder="请输入联系电话"
+              />  
+            </template>
+          </van-cell>
         </van-cell-group>
+        <van-cell-group title="服务需求" class="cell">
+              <van-field
+                v-model="form.demand"
+                style="height:100px"
+                class="text"
+                placeholder="请简单描述您要就诊的科室"
+              />  
+        </van-cell-group>
+        <van-button @click="submit" class="submit" type="primary" style="width: 100%;">提交订单</van-button>
 
         <van-popup
           v-model:show="showHosptial"
@@ -54,8 +94,8 @@
             @confirm="showHosptialConfirm"
             @cancel="showHosptial = false"
           />
-
       </van-popup>
+
       <van-popup
           v-model:show="showStartTime"
           position="bottom"
@@ -67,7 +107,18 @@
             title="选择日期"
             :min-date="minDate"
           />
-
+      </van-popup>
+      
+      <van-popup
+          v-model:show="showCompanion"
+          position="bottom"
+          :style="{ height: '30%' }"
+        >
+          <van-picker
+            :columns="showCompanionColumns"
+            @confirm="showCompanionConfirm"
+            @cancel="showCompanion = false"
+          />
       </van-popup>
     </div>
     
@@ -122,10 +173,29 @@ const showTimeConfirm = (item) => {
   showStartTime.value = false
 }
 
+const showCompanion = ref(false)
+const showCompanionColumns = computed(() => {
+  return createData.companion.map(item => {
+    return {text:item.name,value:item.id}
+  })
+})
+
+const compainionName = ref()
+const showCompanionConfirm = (item) => {
+  form.companion_id = item.selectedOptions[0].value
+  compainionName.value = item.selectedOptions[0].text
+  showCompanion.value = false
+}
+
+const submit = () => {
+  
+}
+
 </script>
 
 <style lang="less" scoped>
 .container {
+  position: relative;
   background-color: #f0f0f0;
   height: 100vh;
 }
@@ -154,4 +224,9 @@ const showTimeConfirm = (item) => {
 	  margin-left: 10px;
   }
 }
+.submit{
+  position:absolute ;
+  bottom: 0;
+}
+
   </style>
