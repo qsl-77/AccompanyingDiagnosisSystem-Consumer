@@ -1,6 +1,6 @@
 <template>
     <div class="od-banner">
-      <img class="od-banner-icon" src="/public/images/images/od_bg_icon.png" mode="widthFix" />
+      <img class="od-banner-icon" src="/images/images/od_bg_icon.png" mode="widthFix" />
       <div class="od-jd" :class="[`od-jd-${item}`]">
         <div class="od-jd-out">
           <div class="od-jd-in"></div>

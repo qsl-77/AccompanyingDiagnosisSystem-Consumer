@@ -55,7 +55,7 @@
             <template #title>接送地址</template>
             <template #default>
               <van-field
-                v-model="form.receviceAddress"
+                v-model="form.receiveAddress"
                 class="text"
                 input-align="right"
                 placeholder="请输入接送地址"
@@ -120,13 +120,39 @@
             @cancel="showCompanion = false"
           />
       </van-popup>
+      <!-- 支付二维码弹窗 -->
+      <!-- <van-dialog :show-confirm-button="false" v-model:show="showCode">
+        <van-icon name="cross" @click="closeCode" class="close"/>
+        <div>微信支付</div>
+        <van-image width="150" height="150" :src="codeImg"></van-image>
+        <div>请使用本人账户进行支付</div>
+      </van-dialog> -->
+
+      <van-popup
+        v-model:show="showCode"
+        round
+        closeable
+        position="center"
+        @click-close-icon="closeCode"
+        :style="{ width: '80%', maxWidth: '300px' }"
+      >
+        <div class="custom-qr-popup">
+          <div class="custom-qr-title" style="color: green;">微信支付</div>
+          <van-image width="150" height="150" :src="codeImg" class="qr-image" />
+          <div class="custom-qr-footer">请使用本人账户进行支付</div>
+        </div>
+      </van-popup>
+
     </div>
+
     
 </template>
 <script setup>
 import statusBar from '@/components/statusBar.vue'
 import {onMounted,getCurrentInstance,reactive,ref,computed} from 'vue'
 import { useRouter } from 'vue-router'
+import { showNotify } from 'vant'
+import Qrcode from 'qrcode'
 
 const router = useRouter()
 const { proxy } = getCurrentInstance()
@@ -187,8 +213,36 @@ const showCompanionConfirm = (item) => {
   showCompanion.value = false
 }
 
-const submit = () => {
-  
+const showCode = ref(false)
+const codeImg = ref('')
+
+const submit = async () => {
+  const params = [
+    'hospital_id',
+    'hospital_name',
+    'demand',
+    'companion_id',
+    'receiveAddress',
+    'tel',
+    'starttime'
+  ]
+  for (const i of params) {
+    if (!form[i]) {
+      showNotify({ type: 'warning', message: '请将信息填写完整' });
+      return 
+    }
+  }
+  const { data: resData } = await proxy.$api.createOrder(form)
+  Qrcode.toDataURL(resData.data.wx_code).then((url) => {
+    showCode.value = true
+    codeImg.value = url
+  })
+    
+}
+
+const closeCode = () => {
+  showCode.value = false
+  router.push('/order')
 }
 
 </script>
@@ -227,6 +281,44 @@ const submit = () => {
 .submit{
   position:absolute ;
   bottom: 0;
+}
+
+/* 把这些样式添加到你的 <style lang="less" scoped> 块中
+*/
+
+.custom-qr-popup {
+  padding: 15px;
+  padding-top: 50px; /* 为顶部的关闭按钮留出空间 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.custom-qr-title {
+  font-size: 20px;
+  font-weight: bold; /* 使用 500 替代 600，更接近 Vant 风格 */
+  color: #333;
+}
+
+.qr-image {
+  margin: 16px 0; /* 上下留出间距 */
+}
+
+.custom-qr-footer {
+  font-size: 18px;
+  font-weight: bold;
+  color: #666;
+}
+
+/* 使用 ::v-deep 调整 van-popup 默认的关闭按钮位置
+  (从右上角移到左上角，以匹配你的目标图片)
+*/
+:deep(.van-popup__close-icon) {
+  top: 16px;
+  left: 16px;
+  right: auto; /* 取消右侧定位 */
 }
 
   </style>
