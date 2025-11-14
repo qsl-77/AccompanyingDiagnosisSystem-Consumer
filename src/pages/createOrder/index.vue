@@ -283,7 +283,7 @@ const closeCode = () => {
   bottom: 0;
 }
 
-/* 把这些样式添加到你的 <style lang="less" scoped> 块中
+/* 新增订单支付二维码弹窗样式
 */
 
 .custom-qr-popup {
