@@ -30,7 +30,7 @@
 import { get } from "vant/lib/utils";
 import { ref, getCurrentInstance, onMounted } from "vue";
 import counter from "@/components/counter.vue";
-
+import { useRouter } from "vue-router";
 
 onMounted(() => {
     getOrderList("")
@@ -57,9 +57,10 @@ const onClickTab = (item) => {
     getOrderList(item.name)
 };
 
+const router = useRouter()
 // 跳转详情
 const goDetail = (item) => {
-    
+    router.push(`/detail?oid=${item.out_trade_no}`)
 }
 const active = ref("")
 </script>
