@@ -73,7 +73,9 @@ const userInfo = computed(() => {
 // 退出登录弹窗
 const show = ref(false)
 const logout = () => {
-    
+    localStorage.removeItem('h5_token')
+    localStorage.removeItem('h5_userInfo')
+    router.push('/login')
 }
 
 </script>
