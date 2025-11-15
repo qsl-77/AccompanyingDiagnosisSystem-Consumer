@@ -67,7 +67,7 @@ const goOrder = (active) => {
 }
 
 const userInfo = computed(() => {
-    return JSON.parse(localStorage.getItem('h5_userInfo')) || {}
+    return JSON.parse(localStorage.getItem('h5_userinfo')) || {}
 })
 
 // 退出登录弹窗
